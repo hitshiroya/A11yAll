@@ -32,6 +32,7 @@ function App() {
   const [detectedUrl, setDetectedUrl] = useState(null);
 
   const messagesEndRef = useRef(null);
+  const chatRef = useRef(null);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -90,47 +91,70 @@ function App() {
   };
 
   const getButtonText = () => {
-    if (loading) return 'Sending...';
-    if (detectedUrl) return 'Scan URL';
-    return 'Send';
+    if (loading) return 'Analyzing...';
+    if (detectedUrl) return '🔍 Scan URL';
+    return '✨ Send';
+  };
+
+  const getPlaceholderText = () => {
+    if (loading) return "AI is thinking...";
+    if (detectedUrl) return `🔗 URL detected: ${detectedUrl}`;
+    return "Ask about accessibility or paste a URL to scan...";
   };
 
   return (
     <div className="App">
-      <header>
-        <h1>Accessibility at your Fingertips!</h1>
-        <p>Ask anything about accessibility, or provide a URL for a scan!</p>
+      {/* Skip link for screen readers */}
+      <a href="#main-chat" className="skip-link">
+        Skip to main chat area
+      </a>
+      
+      <header role="banner">
+        <h1>🚀 A11yAll</h1>
+        <p>Your AI-powered accessibility consultant at your fingertips!</p>
       </header>
 
-      <main className="chat-container">
-        <div className="messages-display">
+      <main id="main-chat" className="chat-container" role="main" ref={chatRef}>
+        <div 
+          className="messages-display" 
+          role="log" 
+          aria-live="polite" 
+          aria-label="Chat conversation"
+        >
           {messages.length === 0 ? (
-            <div className="welcome-message">
-              <p>Welcome! Start by asking a question or provide a URL to scan.</p>
-              <p>Example: "Can you check accessibility for www.facebook.com?"</p>
+            <div className="welcome-message" role="region" aria-label="Welcome message">
+              <h3>👋 Welcome to A11yAll!</h3>
+              <p>🎯 Get instant accessibility insights and expert guidance</p>
+              <p>💡 Ask questions or provide a URL for comprehensive analysis</p>
+              <p>🌟 Example: "Can you check accessibility for www.facebook.com?"</p>
             </div>
           ) : (
             messages.map((msg, idx) => (
-              <div key={idx} className={`message ${msg.type}`}>
+              <div 
+                key={idx} 
+                className={`message ${msg.type}`}
+                role={msg.type === 'ai' ? 'article' : 'article'}
+                aria-label={`${msg.type === 'ai' ? 'AI assistant' : 'User'} message`}
+              >
                 {msg.type === 'ai' ? (
-                                                       <ReactMarkdown 
+                  <ReactMarkdown 
                     remarkPlugins={[remarkGfm]}
                     components={{
-                      // Headers with professional styling
+                      // Headers with accessible contrast
                       h1: ({node, ...props}) => (
                         <h1 style={{
-                          color: '#2d3748',
+                          color: 'var(--text-primary)',
                           fontSize: '1.5rem',
                           fontWeight: '700',
                           marginBottom: '1rem',
                           marginTop: '1.5rem',
-                          borderBottom: '2px solid #e2e8f0',
+                          borderBottom: '2px solid var(--border-primary)',
                           paddingBottom: '0.5rem'
                         }} {...props} />
                       ),
                       h2: ({node, ...props}) => (
                         <h2 style={{
-                          color: '#2d3748',
+                          color: 'var(--text-primary)',
                           fontSize: '1.25rem',
                           fontWeight: '600',
                           marginBottom: '0.75rem',
@@ -141,7 +165,7 @@ function App() {
                       ),
                       h3: ({node, ...props}) => (
                         <h3 style={{
-                          color: '#4a5568',
+                          color: 'var(--accent-primary)',
                           fontSize: '1.1rem',
                           fontWeight: '600',
                           marginBottom: '0.5rem',
@@ -153,10 +177,10 @@ function App() {
                         <p style={{
                           marginBottom: '1rem',
                           lineHeight: '1.6',
-                          color: '#2d3748'
+                          color: 'var(--text-primary)'
                         }} {...props} />
                       ),
-                      // Bullet points with ChatGPT-style formatting
+                      // Enhanced bullet points
                       ul: ({node, ...props}) => (
                         <ul style={{
                           paddingLeft: '1.5rem',
@@ -168,7 +192,7 @@ function App() {
                         <li style={{
                           marginBottom: '0.5rem',
                           lineHeight: '1.5',
-                          color: '#2d3748'
+                          color: 'var(--text-primary)'
                         }} {...props} />
                       ),
                       // Numbered lists
@@ -181,34 +205,35 @@ function App() {
                       // Bold text highlighting
                       strong: ({node, ...props}) => (
                         <strong style={{
-                          color: '#1a202c',
+                          color: 'var(--accent-primary)',
                           fontWeight: '600'
                         }} {...props} />
                       ),
-                      // Code blocks with proper styling
+                      // Enhanced code styling
                       code: ({node, inline, ...props}) => 
                         inline ? (
                           <code style={{
-                            backgroundColor: '#f7fafc',
-                            color: '#2d3748',
-                            padding: '0.125rem 0.25rem',
-                            borderRadius: '0.25rem',
+                            backgroundColor: 'var(--bg-tertiary)',
+                            color: 'var(--accent-primary)',
+                            padding: '0.125rem 0.375rem',
+                            borderRadius: '4px',
                             fontSize: '0.875rem',
-                            border: '1px solid #e2e8f0',
-                            fontFamily: 'Monaco, Consolas, "Liberation Mono", "Courier New", monospace'
+                            border: '1px solid var(--border-primary)',
+                            fontFamily: '"SF Mono", Monaco, "Cascadia Code", "Roboto Mono", monospace'
                           }} {...props} />
                         ) : (
                           <code style={{
-                            backgroundColor: '#f7fafc',
-                            color: '#2d3748',
+                            backgroundColor: 'var(--bg-tertiary)',
+                            color: 'var(--text-primary)',
                             padding: '1rem',
-                            borderRadius: '0.5rem',
+                            borderRadius: '8px',
                             display: 'block',
                             fontSize: '0.875rem',
                             overflow: 'auto',
-                            border: '1px solid #e2e8f0',
-                            fontFamily: 'Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
-                            marginBottom: '1rem'
+                            border: '1px solid var(--border-primary)',
+                            fontFamily: '"SF Mono", Monaco, "Cascadia Code", "Roboto Mono", monospace',
+                            marginBottom: '1rem',
+                            boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.3)'
                           }} {...props} />
                         ),
                       // Horizontal rules
@@ -216,43 +241,51 @@ function App() {
                         <hr style={{
                           margin: '2rem 0',
                           border: 'none',
-                          borderTop: '1px solid #e2e8f0'
+                          borderTop: '1px solid var(--border-primary)'
                         }} {...props} />
                       ),
-                      // Tables
+                      // Enhanced tables
                       table: ({node, ...props}) => (
                         <table style={{
                           width: '100%',
                           borderCollapse: 'collapse',
                           marginBottom: '1rem',
-                          fontSize: '0.875rem'
+                          fontSize: '0.875rem',
+                          backgroundColor: 'var(--bg-tertiary)',
+                          border: '1px solid var(--border-primary)',
+                          borderRadius: '8px',
+                          overflow: 'hidden'
                         }} {...props} />
                       ),
                       th: ({node, ...props}) => (
                         <th style={{
                           padding: '0.75rem',
-                          borderBottom: '2px solid #e2e8f0',
+                          borderBottom: '2px solid var(--border-primary)',
                           textAlign: 'left',
                           fontWeight: '600',
-                          color: '#2d3748'
+                          color: 'var(--text-primary)',
+                          backgroundColor: 'var(--bg-secondary)'
                         }} {...props} />
                       ),
                       td: ({node, ...props}) => (
                         <td style={{
                           padding: '0.75rem',
-                          borderBottom: '1px solid #f7fafc',
-                          color: '#2d3748'
+                          borderBottom: '1px solid var(--border-secondary)',
+                          color: 'var(--text-primary)'
                         }} {...props} />
                       ),
-                      // Blockquotes
+                      // Enhanced blockquotes
                       blockquote: ({node, ...props}) => (
                         <blockquote style={{
-                          borderLeft: '4px solid #3182ce',
+                          borderLeft: '4px solid var(--accent-primary)',
                           paddingLeft: '1rem',
                           marginLeft: '0',
                           marginBottom: '1rem',
                           fontStyle: 'italic',
-                          color: '#4a5568'
+                          color: 'var(--text-secondary)',
+                          backgroundColor: 'rgba(121, 192, 255, 0.1)',
+                          padding: '1rem',
+                          borderRadius: '0 8px 8px 0'
                         }} {...props} />
                       )
                     }}
@@ -265,28 +298,66 @@ function App() {
               </div>
             ))
           )}
+          {loading && (
+            <div className="message ai" aria-live="polite">
+              <div className="loading-dots">
+                🤖 Our Expert is analyzing your request
+              </div>
+            </div>
+          )}
           <div ref={messagesEndRef} />
         </div>
 
-        {error && <div className="error-message">{error}</div>}
+        {error && (
+          <div 
+            className="error-message" 
+            role="alert" 
+            aria-live="assertive"
+            tabIndex="-1"
+          >
+            ⚠️ {error}
+          </div>
+        )}
 
-        <form onSubmit={handleSendMessage} className="message-input-form">
+        <form onSubmit={handleSendMessage} className="message-input-form" role="form">
+          <label htmlFor="message-input" className="sr-only">
+            Type your accessibility question or paste a URL to scan
+          </label>
           <textarea
+            id="message-input"
             value={currentQuestion}
             onChange={handleQuestionChange}
-            placeholder={loading ? "Thinking..." : (detectedUrl ? `URL detected: ${detectedUrl}` : "Type your question here...")}
-            rows="3"
+            placeholder={getPlaceholderText()}
+            rows="1"
             disabled={loading}
             aria-label="Ask your question or provide a URL"
+            aria-describedby={detectedUrl ? "url-detected" : undefined}
+            style={{
+              transition: 'height 0.2s ease',
+              height: 'auto',
+              minHeight: '56px'
+            }}
           />
-          <button type="submit" disabled={loading}>
+          {detectedUrl && (
+            <div id="url-detected" className="sr-only">
+              URL detected: {detectedUrl}
+            </div>
+          )}
+          <button 
+            type="submit" 
+            disabled={loading || !currentQuestion.trim()}
+            aria-describedby="button-description"
+          >
             {getButtonText()}
           </button>
+          <div id="button-description" className="sr-only">
+            {detectedUrl ? 'Analyze the detected URL for accessibility issues' : 'Send your message to the AI assistant'}
+          </div>
         </form>
       </main>
 
-      <footer>
-        <p>Made by Hit Shiroya.</p>
+      <footer role="contentinfo">
+        <p>Crafted with accessibility in mind by Hit Shiroya</p>
       </footer>
     </div>
   );
