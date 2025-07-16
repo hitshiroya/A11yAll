@@ -1,0 +1,226 @@
+/* a11y-insights-tool/client/src/App.css */
+#root {
+  max-width: 900px; /* Adjust max width for chat interface */
+  margin: 0 auto;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Ensure app takes full viewport height */
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f0f2f5; /* Light background */
+  color: #333;
+}
+
+.App {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1; /* Allow app content to grow */
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+  overflow: hidden; /* For rounded corners */
+}
+
+header {
+  text-align: center;
+  padding: 1.5rem;
+  background-color: #007bff;
+  color: white;
+  border-bottom: 1px solid #0056b3;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+header h1 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  font-size: 2.2rem;
+}
+
+header p {
+  margin: 0;
+  font-size: 1.1rem;
+  opacity: 0.9;
+}
+
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  padding: 1.5rem;
+  overflow-y: auto; /* Enable scrolling for messages */
+  max-height: calc(100vh - 200px); /* Adjust based on header/footer/input height */
+  position: relative; /* For scroll to bottom */
+}
+
+.messages-display {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding-right: 10px; /* For scrollbar space */
+  display: flex;
+  flex-direction: column; /* Stack messages top-to-bottom */
+  gap: 15px; /* Space between messages */
+}
+
+/* Custom scrollbar */
+.messages-display::-webkit-scrollbar {
+  width: 6px;
+}
+
+.messages-display::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.messages-display::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.messages-display::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+.welcome-message {
+  text-align: center;
+  color: #777;
+  padding: 20px;
+  border: 1px dashed #ddd;
+  border-radius: 8px;
+  margin: auto 0; /* Center vertically */
+}
+
+.welcome-message p {
+  margin: 0.5em 0;
+}
+
+.message {
+  max-width: 80%;
+  padding: 12px 18px;
+  border-radius: 20px;
+  line-height: 1.5;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.message.user {
+  align-self: flex-end; /* Align user messages to the right */
+  background-color: #e6f3ff; /* Light blue for user messages */
+  color: #333;
+  border-bottom-right-radius: 5px; /* Sharpen one corner */
+}
+
+.message.ai {
+  align-self: flex-start; /* Align AI messages to the left */
+  background-color: #f8f9fa; /* Light gray for AI messages */
+  color: #333;
+  border-bottom-left-radius: 5px; /* Sharpen one corner */
+}
+
+.message p {
+  margin: 0;
+}
+
+.message-input-form {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-top: 1.5rem;
+  border-top: 1px solid #f0f0f0;
+}
+
+textarea {
+  flex-grow: 1;
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  resize: vertical; /* Allow vertical resizing only */
+  min-height: 50px; /* Minimum height */
+  max-height: 150px; /* Max height before scrolling */
+  box-sizing: border-box; /* Include padding/border in width/height */
+}
+
+textarea:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+}
+
+button {
+  padding: 12px 25px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  font-weight: 500;
+  transition: background-color 0.2s ease-in-out;
+}
+
+button:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.loading-message {
+  text-align: center;
+  color: #007bff;
+  font-style: italic;
+  margin-top: 10px;
+}
+
+.error-message {
+  text-align: center;
+  color: #dc3545;
+  font-weight: bold;
+  background-color: #ffebe8;
+  padding: 10px;
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
+footer {
+  text-align: center;
+  padding: 1.5rem;
+  border-top: 1px solid #f0f0f0;
+  color: #777;
+  font-size: 0.85rem;
+  margin-top: auto; /* Pushes footer to the bottom */
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  #root {
+    padding: 1rem;
+  }
+  header h1 {
+    font-size: 1.8rem;
+  }
+  .message {
+    max-width: 95%;
+  }
+  .message-input-form {
+    flex-direction: column;
+    gap: 15px;
+  }
+  textarea {
+    width: 100%;
+    min-height: 40px;
+  }
+  button {
+    width: 100%;
+  }
+}
