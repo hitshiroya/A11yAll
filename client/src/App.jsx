@@ -149,7 +149,11 @@ function App() {
                           marginBottom: '1rem',
                           marginTop: '1.5rem',
                           borderBottom: '2px solid var(--border-primary)',
-                          paddingBottom: '0.5rem'
+                          paddingBottom: '0.5rem',
+                          userSelect: 'text',
+                          WebkitUserSelect: 'text',
+                          MozUserSelect: 'text',
+                          msUserSelect: 'text'
                         }} {...props} />
                       ),
                       h2: ({node, ...props}) => (
@@ -160,7 +164,11 @@ function App() {
                           marginBottom: '0.75rem',
                           marginTop: '1.25rem',
                           display: 'flex',
-                          alignItems: 'center'
+                          alignItems: 'center',
+                          userSelect: 'text',
+                          WebkitUserSelect: 'text',
+                          MozUserSelect: 'text',
+                          msUserSelect: 'text'
                         }} {...props} />
                       ),
                       h3: ({node, ...props}) => (
@@ -169,7 +177,11 @@ function App() {
                           fontSize: '1.1rem',
                           fontWeight: '600',
                           marginBottom: '0.5rem',
-                          marginTop: '1rem'
+                          marginTop: '1rem',
+                          userSelect: 'text',
+                          WebkitUserSelect: 'text',
+                          MozUserSelect: 'text',
+                          msUserSelect: 'text'
                         }} {...props} />
                       ),
                       // Paragraphs with proper spacing
@@ -177,7 +189,11 @@ function App() {
                         <p style={{
                           marginBottom: '1rem',
                           lineHeight: '1.6',
-                          color: 'var(--text-primary)'
+                          color: 'var(--text-primary)',
+                          userSelect: 'text',
+                          WebkitUserSelect: 'text',
+                          MozUserSelect: 'text',
+                          msUserSelect: 'text'
                         }} {...props} />
                       ),
                       // Enhanced bullet points
@@ -185,28 +201,44 @@ function App() {
                         <ul style={{
                           paddingLeft: '1.5rem',
                           marginBottom: '1rem',
-                          listStyleType: 'disc'
+                          listStyleType: 'disc',
+                          userSelect: 'text',
+                          WebkitUserSelect: 'text',
+                          MozUserSelect: 'text',
+                          msUserSelect: 'text'
                         }} {...props} />
                       ),
                       li: ({node, ...props}) => (
                         <li style={{
                           marginBottom: '0.5rem',
                           lineHeight: '1.5',
-                          color: 'var(--text-primary)'
+                          color: 'var(--text-primary)',
+                          userSelect: 'text',
+                          WebkitUserSelect: 'text',
+                          MozUserSelect: 'text',
+                          msUserSelect: 'text'
                         }} {...props} />
                       ),
                       // Numbered lists
                       ol: ({node, ...props}) => (
                         <ol style={{
                           paddingLeft: '1.5rem',
-                          marginBottom: '1rem'
+                          marginBottom: '1rem',
+                          userSelect: 'text',
+                          WebkitUserSelect: 'text',
+                          MozUserSelect: 'text',
+                          msUserSelect: 'text'
                         }} {...props} />
                       ),
                       // Bold text highlighting
                       strong: ({node, ...props}) => (
                         <strong style={{
                           color: 'var(--accent-primary)',
-                          fontWeight: '600'
+                          fontWeight: '600',
+                          userSelect: 'text',
+                          WebkitUserSelect: 'text',
+                          MozUserSelect: 'text',
+                          msUserSelect: 'text'
                         }} {...props} />
                       ),
                       // Enhanced code styling
@@ -219,7 +251,11 @@ function App() {
                             borderRadius: '4px',
                             fontSize: '0.875rem',
                             border: '1px solid var(--border-primary)',
-                            fontFamily: '"SF Mono", Monaco, "Cascadia Code", "Roboto Mono", monospace'
+                            fontFamily: '"SF Mono", Monaco, "Cascadia Code", "Roboto Mono", monospace',
+                            userSelect: 'text',
+                            WebkitUserSelect: 'text',
+                            MozUserSelect: 'text',
+                            msUserSelect: 'text'
                           }} {...props} />
                         ) : (
                           <code style={{
@@ -233,7 +269,11 @@ function App() {
                             border: '1px solid var(--border-primary)',
                             fontFamily: '"SF Mono", Monaco, "Cascadia Code", "Roboto Mono", monospace',
                             marginBottom: '1rem',
-                            boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.3)'
+                            boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.3)',
+                            userSelect: 'text',
+                            WebkitUserSelect: 'text',
+                            MozUserSelect: 'text',
+                            msUserSelect: 'text'
                           }} {...props} />
                         ),
                       // Horizontal rules
@@ -254,7 +294,11 @@ function App() {
                           backgroundColor: 'var(--bg-tertiary)',
                           border: '1px solid var(--border-primary)',
                           borderRadius: '8px',
-                          overflow: 'hidden'
+                          overflow: 'hidden',
+                          userSelect: 'text',
+                          WebkitUserSelect: 'text',
+                          MozUserSelect: 'text',
+                          msUserSelect: 'text'
                         }} {...props} />
                       ),
                       th: ({node, ...props}) => (
@@ -264,14 +308,22 @@ function App() {
                           textAlign: 'left',
                           fontWeight: '600',
                           color: 'var(--text-primary)',
-                          backgroundColor: 'var(--bg-secondary)'
+                          backgroundColor: 'var(--bg-secondary)',
+                          userSelect: 'text',
+                          WebkitUserSelect: 'text',
+                          MozUserSelect: 'text',
+                          msUserSelect: 'text'
                         }} {...props} />
                       ),
                       td: ({node, ...props}) => (
                         <td style={{
                           padding: '0.75rem',
                           borderBottom: '1px solid var(--border-secondary)',
-                          color: 'var(--text-primary)'
+                          color: 'var(--text-primary)',
+                          userSelect: 'text',
+                          WebkitUserSelect: 'text',
+                          MozUserSelect: 'text',
+                          msUserSelect: 'text'
                         }} {...props} />
                       ),
                       // Enhanced blockquotes
@@ -285,7 +337,11 @@ function App() {
                           color: 'var(--text-secondary)',
                           backgroundColor: 'rgba(121, 192, 255, 0.1)',
                           padding: '1rem',
-                          borderRadius: '0 8px 8px 0'
+                          borderRadius: '0 8px 8px 0',
+                          userSelect: 'text',
+                          WebkitUserSelect: 'text',
+                          MozUserSelect: 'text',
+                          msUserSelect: 'text'
                         }} {...props} />
                       )
                     }}

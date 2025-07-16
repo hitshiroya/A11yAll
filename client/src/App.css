@@ -219,6 +219,125 @@ header p {
   line-height: 1.6;
 }
 
+/* Enhanced markdown styling for accessibility */
+.message.ai h1, .message.ai h2, .message.ai h3 {
+  color: var(--text-primary);
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  user-select: text;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+}
+
+.message.ai h1:first-child,
+.message.ai h2:first-child,
+.message.ai h3:first-child {
+  margin-top: 0;
+}
+
+.message.ai ul, .message.ai ol {
+  margin: 1rem 0;
+  padding-left: 1.5rem;
+  user-select: text;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+}
+
+.message.ai li {
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+  user-select: text;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+}
+
+.message.ai p {
+  user-select: text;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+}
+
+.message.ai code {
+  background: var(--bg-tertiary);
+  color: var(--accent-primary);
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', monospace;
+  border: 1px solid var(--border-primary);
+  user-select: text;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+}
+
+.message.ai pre {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-primary);
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 1rem 0;
+  overflow-x: auto;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+  user-select: text;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+}
+
+.message.ai blockquote {
+  background: rgba(121, 192, 255, 0.1);
+  border-left: 4px solid var(--accent-primary);
+  margin: 1rem 0;
+  padding: 1rem;
+  border-radius: 0 8px 8px 0;
+  user-select: text;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+}
+
+.message.ai table {
+  border: 1px solid var(--border-primary);
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 1rem 0;
+  background: var(--bg-tertiary);
+  user-select: text;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+}
+
+.message.ai th {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--border-primary);
+  user-select: text;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+}
+
+.message.ai td {
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--border-secondary);
+  color: var(--text-primary);
+  user-select: text;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+}
+
+.message.ai tr:nth-child(even) {
+  background: rgba(22, 27, 34, 0.5);
+}
+
+/* Ensure all message content is selectable */
 .message {
   max-width: 75%;
   padding: 1rem 1.5rem;
@@ -226,6 +345,10 @@ header p {
   line-height: 1.6;
   position: relative;
   animation: messageSlide 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: text;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
 }
 
 @keyframes messageSlide {
@@ -239,6 +362,7 @@ header p {
   }
 }
 
+/* Ensure user messages are also selectable */
 .message.user {
   align-self: flex-end;
   background: var(--user-gradient);
@@ -246,6 +370,34 @@ header p {
   border-bottom-right-radius: 6px;
   box-shadow: 0 8px 32px rgba(124, 58, 237, 0.3);
   position: relative;
+  user-select: text;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+}
+
+.message.ai {
+  align-self: flex-start;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border-bottom-left-radius: 6px;
+  border: 1px solid var(--border-primary);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  position: relative;
+  user-select: text;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+}
+
+/* Make sure pseudo-elements don't interfere with selection */
+.message.user::before,
+.message.ai::before {
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }
 
 .message.user::before {
@@ -260,16 +412,6 @@ header p {
   -webkit-mask-composite: xor;
 }
 
-.message.ai {
-  align-self: flex-start;
-  background: var(--bg-secondary);
-  color: var(--text-primary);
-  border-bottom-left-radius: 6px;
-  border: 1px solid var(--border-primary);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-  position: relative;
-}
-
 .message.ai::before {
   content: '';
   position: absolute;
@@ -281,81 +423,6 @@ header p {
   mask-composite: xor;
   -webkit-mask-composite: xor;
   opacity: 0.6;
-}
-
-/* Enhanced markdown styling for accessibility */
-.message.ai h1, .message.ai h2, .message.ai h3 {
-  color: var(--text-primary);
-  margin-top: 1.5rem;
-  margin-bottom: 0.75rem;
-}
-
-.message.ai h1:first-child,
-.message.ai h2:first-child,
-.message.ai h3:first-child {
-  margin-top: 0;
-}
-
-.message.ai ul, .message.ai ol {
-  margin: 1rem 0;
-  padding-left: 1.5rem;
-}
-
-.message.ai li {
-  margin-bottom: 0.5rem;
-  color: var(--text-primary);
-}
-
-.message.ai code {
-  background: var(--bg-tertiary);
-  color: var(--accent-primary);
-  padding: 0.25rem 0.5rem;
-  border-radius: 6px;
-  font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', monospace;
-  border: 1px solid var(--border-primary);
-}
-
-.message.ai pre {
-  background: var(--bg-tertiary);
-  border: 1px solid var(--border-primary);
-  border-radius: 8px;
-  padding: 1rem;
-  margin: 1rem 0;
-  overflow-x: auto;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
-}
-
-.message.ai blockquote {
-  background: rgba(121, 192, 255, 0.1);
-  border-left: 4px solid var(--accent-primary);
-  margin: 1rem 0;
-  padding: 1rem;
-  border-radius: 0 8px 8px 0;
-}
-
-.message.ai table {
-  border: 1px solid var(--border-primary);
-  border-radius: 8px;
-  overflow: hidden;
-  margin: 1rem 0;
-  background: var(--bg-tertiary);
-}
-
-.message.ai th {
-  background: var(--bg-secondary);
-  color: var(--text-primary);
-  padding: 0.75rem;
-  border-bottom: 1px solid var(--border-primary);
-}
-
-.message.ai td {
-  padding: 0.75rem;
-  border-bottom: 1px solid var(--border-secondary);
-  color: var(--text-primary);
-}
-
-.message.ai tr:nth-child(even) {
-  background: rgba(22, 27, 34, 0.5);
 }
 
 .message-input-form {
