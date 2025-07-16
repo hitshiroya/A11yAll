@@ -44,68 +44,105 @@ async function generateAccessibilityAnalysis(url, violations) {
 
         const totalViolations = violations.reduce((sum, result) => sum + result.violations.length, 0);
         
-        const prompt = `You are an expert accessibility consultant. Analyze the accessibility scan results for ${url} and provide a comprehensive, well-structured report.
+        const prompt = `You are a senior accessibility expert conducting a professional website audit. Analyze the scan results for ${url} and deliver a comprehensive, actionable report.
 
-**SCAN DATA:**
-- Total violations: ${totalViolations}
-- URL: ${url}
-- Timestamp: ${violations[0]?.timestamp || 'N/A'}
+**AUDIT DATA:**
+• Website: ${url}
+• Total Issues Found: ${totalViolations}
+• Scan Timestamp: ${violations[0]?.timestamp || 'N/A'}
+• Compliance Framework: WCAG 2.1 Guidelines
 
-**VIOLATIONS BY IMPACT:**
+**ISSUE BREAKDOWN BY SEVERITY:**
 ${Object.entries(violationSummary).map(([impact, issues]) => `
-${impact.toUpperCase()} (${issues.length} issues):
-${issues.slice(0, 3).map(issue => `• ${issue.description} (${issue.nodeCount} elements)`).join('\n')}
+📍 ${impact.toUpperCase()} IMPACT (${issues.length} violations):
+${issues.slice(0, 3).map(issue => `   → ${issue.description}\n     Affects: ${issue.nodeCount} elements`).join('\n')}
 `).join('\n')}
 
-**FORMAT YOUR RESPONSE EXACTLY LIKE THIS STRUCTURE:**
+**MANDATORY RESPONSE FORMAT - Follow this structure exactly:**
 
-# 🔍 Accessibility Analysis Report
+# 🔍 Web Accessibility Audit Report
 
-## 📊 Executive Summary
-[Write 2-3 sentences about the overall accessibility state and compliance level]
+## 📋 Executive Summary
+Write 2-3 clear sentences explaining:
+• Overall accessibility compliance status
+• Main areas of concern
+• Business impact if not addressed
 
-## 🚨 Critical Issues to Fix First
+## 🚨 Top 3 Critical Issues (Fix Immediately)
 
-### 1. [Most Critical Issue Name]
-**Impact Level:** High/Medium/Low  
-**Elements Affected:** [Number] elements  
-**Quick Fix:** [Specific, actionable solution in 1-2 sentences]
+### 1. [Specific Issue Name - be descriptive]
+**🎯 Priority:** Critical/High/Medium  
+**📊 Impact:** [Explain user impact in plain language]  
+**🔧 Elements Affected:** [X] elements  
+**✅ Solution:** [Step-by-step fix - be specific]  
+**⏱️ Time to Fix:** [Realistic estimate]
 
-### 2. [Second Critical Issue]
-**Impact Level:** High/Medium/Low  
-**Elements Affected:** [Number] elements  
-**Quick Fix:** [Specific, actionable solution in 1-2 sentences]
+### 2. [Second Most Critical Issue]
+**🎯 Priority:** Critical/High/Medium  
+**📊 Impact:** [Explain user impact in plain language]  
+**🔧 Elements Affected:** [X] elements  
+**✅ Solution:** [Step-by-step fix - be specific]  
+**⏱️ Time to Fix:** [Realistic estimate]
 
-### 3. [Third Critical Issue]  
-**Impact Level:** High/Medium/Low  
-**Elements Affected:** [Number] elements  
-**Quick Fix:** [Specific, actionable solution in 1-2 sentences]
+### 3. [Third Most Critical Issue]
+**🎯 Priority:** Critical/High/Medium  
+**📊 Impact:** [Explain user impact in plain language]  
+**🔧 Elements Affected:** [X] elements  
+**✅ Solution:** [Step-by-step fix - be specific]  
+**⏱️ Time to Fix:** [Realistic estimate]
 
-## 📈 Accessibility Score
-**Overall Score:** [X]/10  
-**WCAG Grade:** [A, AA, or AAA compliance level]  
-**Status:** [Pass/Needs Work/Critical Issues]
+## 📊 Compliance Assessment
 
-## 🎯 Priority Action Plan
-1. **Immediate (This Week):** [Most urgent fix]
-2. **Short Term (This Month):** [Important improvements]  
-3. **Long Term (Next Quarter):** [Comprehensive enhancements]
+**🏆 Accessibility Score:** [X]/10  
+**📜 WCAG Compliance:** [A / AA / AAA - Current Level]  
+**🎯 Target Compliance:** AA (Recommended)  
+**🚦 Status:** Pass / Needs Improvement / Critical Issues  
+**👥 User Impact:** [How many users are affected]
 
-## 💡 Pro Tips for Better Accessibility
-• [Practical tip 1]
-• [Practical tip 2]  
-• [Practical tip 3]
+## 🗓️ Action Roadmap
+
+### Week 1 (Critical Fixes)
+1. **[Most urgent item]** - [Why it's urgent]
+2. **[Second urgent item]** - [Why it's urgent]
+3. **[Third urgent item]** - [Why it's urgent]
+
+### Month 1 (High Priority)
+• **[Important improvement 1]** - [Expected outcome]
+• **[Important improvement 2]** - [Expected outcome]
+• **[Important improvement 3]** - [Expected outcome]
+
+### Quarter 1 (Strategic Enhancements)
+• **[Long-term improvement 1]** - [Strategic benefit]
+• **[Long-term improvement 2]** - [Strategic benefit]
+• **[Accessibility training/processes]** - [Team capability building]
+
+## 💡 Expert Recommendations
+
+### Quick Wins (Low effort, high impact)
+• **[Recommendation 1]** - [Why this helps]
+• **[Recommendation 2]** - [Why this helps]
+• **[Recommendation 3]** - [Why this helps]
+
+### Development Best Practices
+• **[Practice 1]** - [Implementation tip]
+• **[Practice 2]** - [Implementation tip]
+• **[Practice 3]** - [Implementation tip]
+
+### Testing & Validation
+• **[Testing method 1]** - [Why important]
+• **[Testing method 2]** - [Why important]
+• **[Ongoing monitoring]** - [How to maintain compliance]
 
 ---
-*Report generated for ${url}*
+**Report Generated:** ${url} | **Scan Date:** ${new Date().toLocaleDateString()}
 
-**IMPORTANT:** Use proper markdown formatting with headers (# ## ###), bold text (**text**), bullet points (•), and emojis. Make it visually appealing and easy to scan like ChatGPT responses.`;
+**CRITICAL:** Use proper markdown formatting. Be specific, actionable, and professional. Focus on practical solutions, not just problems.`;
 
         const chatCompletion = await groq.chat.completions.create({
             messages: [
                 {
                     role: "system",
-                    content: "You are an expert accessibility consultant. ALWAYS respond with well-formatted markdown using headers (# ## ###), bold text (**text**), bullet points (•), numbered lists (1. 2. 3.), and relevant emojis. Follow the exact format structure provided in the prompt. Make responses visually appealing and easy to scan like ChatGPT. Be specific, practical, and encouraging."
+                    content: "You are a senior accessibility auditor with WCAG certification. You conduct professional website audits for enterprise clients. CRITICAL REQUIREMENTS: 1) Follow the EXACT format structure provided 2) Be specific and actionable 3) Use professional markdown formatting 4) Include realistic time estimates 5) Focus on business impact and user experience 6) Provide step-by-step solutions 7) Use appropriate emojis for visual organization. Write like you're presenting to a development team and business stakeholders."
                 },
                 {
                     role: "user",
@@ -113,8 +150,8 @@ ${issues.slice(0, 3).map(issue => `• ${issue.description} (${issue.nodeCount} 
                 }
             ],
             model: "llama3-8b-8192", // Fast and capable model
-            temperature: 0.3,
-            max_tokens: 1500,
+            temperature: 0.2, // Lower for more consistent, professional output
+            max_tokens: 2000, // Increased for detailed reports
         });
 
         return chatCompletion.choices[0]?.message?.content || 'Unable to generate analysis';
@@ -241,16 +278,38 @@ app.post('/api/chat-general', async (req, res) => {
                 messages: [
                     {
                         role: "system",
-                        content: "You are an expert accessibility consultant. ALWAYS respond with well-formatted markdown using headers (## ###), bold text (**text**), bullet points (•), numbered lists (1. 2. 3.), and relevant emojis. Make responses visually appealing and easy to scan like ChatGPT. Be specific, practical, and encouraging. Use code blocks for code examples with ```html or ```css."
+                        content: `You are a senior web accessibility expert with 10+ years of experience. Your responses must be:
+
+**RESPONSE STRUCTURE (MANDATORY):**
+1. **Quick Answer** - Direct 1-sentence response to their question
+2. **Detailed Explanation** - Break down the concept step-by-step
+3. **Practical Examples** - Show real code/implementation examples
+4. **Best Practices** - List actionable recommendations
+5. **Common Mistakes** - Warn about frequent pitfalls
+6. **Testing Methods** - How to verify/validate the solution
+7. **Resources** - Where to learn more
+
+**FORMATTING REQUIREMENTS:**
+• Use clear headers: ## Main Topic, ### Subtopics
+• Bold key terms: **WCAG**, **screen readers**, **keyboard navigation**
+• Use bullet points (•) for lists
+• Use numbered lists (1. 2. 3.) for sequential steps
+• Include relevant emojis: 🎯 ✅ ❌ 💡 🔧 📋 👀 ⚠️
+• Code examples in \`\`\`html or \`\`\`css blocks
+• Make responses scannable and actionable
+
+**TONE:** Professional but approachable, encouraging, solution-focused`
                     },
                     {
                         role: "user",
-                        content: `Please answer this accessibility question with proper markdown formatting:\n\n${question}`
+                        content: `Question: ${question}
+
+Please provide a comprehensive answer following the mandatory structure above. Be specific and actionable.`
                     }
                 ],
                 model: "llama3-8b-8192",
-                temperature: 0.3,
-                max_tokens: 1500,
+                temperature: 0.2, // Lower for more structured responses
+                max_tokens: 1800, // Increased for comprehensive answers
             });
 
             res.json({

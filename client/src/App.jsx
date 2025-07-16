@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import axios from 'axios';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import './App.css';
 
 // --- Helper function to extract and validate URLs ---
@@ -111,7 +113,152 @@ function App() {
             messages.map((msg, idx) => (
               <div key={idx} className={`message ${msg.type}`}>
                 {msg.type === 'ai' ? (
-                                                       <div dangerouslySetInnerHTML={{ __html: msg.text }} />
+                                                       <ReactMarkdown 
+                    remarkPlugins={[remarkGfm]}
+                    components={{
+                      // Headers with professional styling
+                      h1: ({node, ...props}) => (
+                        <h1 style={{
+                          color: '#2d3748',
+                          fontSize: '1.5rem',
+                          fontWeight: '700',
+                          marginBottom: '1rem',
+                          marginTop: '1.5rem',
+                          borderBottom: '2px solid #e2e8f0',
+                          paddingBottom: '0.5rem'
+                        }} {...props} />
+                      ),
+                      h2: ({node, ...props}) => (
+                        <h2 style={{
+                          color: '#2d3748',
+                          fontSize: '1.25rem',
+                          fontWeight: '600',
+                          marginBottom: '0.75rem',
+                          marginTop: '1.25rem',
+                          display: 'flex',
+                          alignItems: 'center'
+                        }} {...props} />
+                      ),
+                      h3: ({node, ...props}) => (
+                        <h3 style={{
+                          color: '#4a5568',
+                          fontSize: '1.1rem',
+                          fontWeight: '600',
+                          marginBottom: '0.5rem',
+                          marginTop: '1rem'
+                        }} {...props} />
+                      ),
+                      // Paragraphs with proper spacing
+                      p: ({node, ...props}) => (
+                        <p style={{
+                          marginBottom: '1rem',
+                          lineHeight: '1.6',
+                          color: '#2d3748'
+                        }} {...props} />
+                      ),
+                      // Bullet points with ChatGPT-style formatting
+                      ul: ({node, ...props}) => (
+                        <ul style={{
+                          paddingLeft: '1.5rem',
+                          marginBottom: '1rem',
+                          listStyleType: 'disc'
+                        }} {...props} />
+                      ),
+                      li: ({node, ...props}) => (
+                        <li style={{
+                          marginBottom: '0.5rem',
+                          lineHeight: '1.5',
+                          color: '#2d3748'
+                        }} {...props} />
+                      ),
+                      // Numbered lists
+                      ol: ({node, ...props}) => (
+                        <ol style={{
+                          paddingLeft: '1.5rem',
+                          marginBottom: '1rem'
+                        }} {...props} />
+                      ),
+                      // Bold text highlighting
+                      strong: ({node, ...props}) => (
+                        <strong style={{
+                          color: '#1a202c',
+                          fontWeight: '600'
+                        }} {...props} />
+                      ),
+                      // Code blocks with proper styling
+                      code: ({node, inline, ...props}) => 
+                        inline ? (
+                          <code style={{
+                            backgroundColor: '#f7fafc',
+                            color: '#2d3748',
+                            padding: '0.125rem 0.25rem',
+                            borderRadius: '0.25rem',
+                            fontSize: '0.875rem',
+                            border: '1px solid #e2e8f0',
+                            fontFamily: 'Monaco, Consolas, "Liberation Mono", "Courier New", monospace'
+                          }} {...props} />
+                        ) : (
+                          <code style={{
+                            backgroundColor: '#f7fafc',
+                            color: '#2d3748',
+                            padding: '1rem',
+                            borderRadius: '0.5rem',
+                            display: 'block',
+                            fontSize: '0.875rem',
+                            overflow: 'auto',
+                            border: '1px solid #e2e8f0',
+                            fontFamily: 'Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
+                            marginBottom: '1rem'
+                          }} {...props} />
+                        ),
+                      // Horizontal rules
+                      hr: ({node, ...props}) => (
+                        <hr style={{
+                          margin: '2rem 0',
+                          border: 'none',
+                          borderTop: '1px solid #e2e8f0'
+                        }} {...props} />
+                      ),
+                      // Tables
+                      table: ({node, ...props}) => (
+                        <table style={{
+                          width: '100%',
+                          borderCollapse: 'collapse',
+                          marginBottom: '1rem',
+                          fontSize: '0.875rem'
+                        }} {...props} />
+                      ),
+                      th: ({node, ...props}) => (
+                        <th style={{
+                          padding: '0.75rem',
+                          borderBottom: '2px solid #e2e8f0',
+                          textAlign: 'left',
+                          fontWeight: '600',
+                          color: '#2d3748'
+                        }} {...props} />
+                      ),
+                      td: ({node, ...props}) => (
+                        <td style={{
+                          padding: '0.75rem',
+                          borderBottom: '1px solid #f7fafc',
+                          color: '#2d3748'
+                        }} {...props} />
+                      ),
+                      // Blockquotes
+                      blockquote: ({node, ...props}) => (
+                        <blockquote style={{
+                          borderLeft: '4px solid #3182ce',
+                          paddingLeft: '1rem',
+                          marginLeft: '0',
+                          marginBottom: '1rem',
+                          fontStyle: 'italic',
+                          color: '#4a5568'
+                        }} {...props} />
+                      )
+                    }}
+                  >
+                    {msg.text}
+                  </ReactMarkdown>
                 ) : (
                   <div>{msg.text}</div>
                 )}
