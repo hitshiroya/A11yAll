@@ -23,6 +23,14 @@
       "dest": "/assets/$1"
     },
     {
+      "src": "/a11yall-favicon.svg",
+      "dest": "/a11yall-favicon.svg"
+    },
+    {
+      "src": "/favicon.ico",
+      "dest": "/a11yall-favicon.svg"
+    },
+    {
       "src": "/vite.svg",
       "dest": "/vite.svg"
     },
