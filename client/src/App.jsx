@@ -58,11 +58,14 @@ function App() {
 
     try {
       let response;
+      // Use relative URLs for production, localhost for development
+      const baseURL = import.meta.env.PROD ? '' : 'http://localhost:5000';
+      
       if (detectedUrl) {
-        response = await axios.post('http://localhost:5000/api/scan-url', { url: detectedUrl });
+        response = await axios.post(`${baseURL}/api/scan-url`, { url: detectedUrl });
         console.log(`[Frontend] Sending scan request for: ${detectedUrl}`);
       } else {
-        response = await axios.post('http://localhost:5000/api/chat-general', { question: userMessage.text });
+        response = await axios.post(`${baseURL}/api/chat-general`, { question: userMessage.text });
         console.log(`[Frontend] Sending general chat request.`);
       }
 
