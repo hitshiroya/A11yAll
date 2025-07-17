@@ -159,28 +159,136 @@ Write 2-3 clear sentences explaining:
     }
 }
 
-// Helper function to provide URL analysis when Cypress is not available
-async function generateUrlAnalysisWithoutScan(url) {
+// Advanced AI-powered accessibility analysis for serverless environments
+async function generateServerlessAccessibilityAnalysis(url) {
     if (!process.env.GROQ_API_KEY) {
-        return `I received a request to analyze **${url}**, but I'm currently running in a serverless environment where I cannot perform live accessibility scans. Please add your GROQ_API_KEY to get AI-powered analysis and recommendations.`;
+        return `I received a request to analyze **${url}**. Please add your GROQ_API_KEY environment variable to enable AI-powered accessibility analysis.`;
     }
 
     try {
-        const prompt = `You are a senior accessibility expert. A user has requested analysis of ${url}, but live accessibility scanning is not available in this serverless environment. 
+        // Extract domain and analyze website type
+        const domain = new URL(url).hostname.toLowerCase();
+        let websiteType = 'general website';
+        
+        if (domain.includes('facebook')) websiteType = 'social media platform';
+        else if (domain.includes('twitter') || domain.includes('x.com')) websiteType = 'social media platform';
+        else if (domain.includes('youtube')) websiteType = 'video streaming platform';
+        else if (domain.includes('netflix')) websiteType = 'video streaming service';
+        else if (domain.includes('amazon')) websiteType = 'e-commerce platform';
+        else if (domain.includes('google')) websiteType = 'search engine';
+        else if (domain.includes('github')) websiteType = 'code repository platform';
+        else if (domain.includes('linkedin')) websiteType = 'professional networking platform';
+        else if (domain.includes('wikipedia')) websiteType = 'knowledge base platform';
+        else if (domain.includes('news') || domain.includes('cnn') || domain.includes('bbc')) websiteType = 'news website';
 
-Provide helpful guidance about:
-1. How to manually check accessibility
-2. Common accessibility issues to look for on websites
-3. Tools they can use to scan the website themselves
-4. General best practices for the type of website they're analyzing
+        const prompt = `You are conducting a comprehensive accessibility analysis for ${url}, a ${websiteType}. While I cannot perform live automated scanning in this environment, provide an expert professional audit report.
 
-Format your response professionally with actionable advice.`;
+**ANALYSIS REQUEST:**
+• Website: ${url}
+• Type: ${websiteType}
+• Analysis Method: Expert Knowledge + Industry Standards
+• Framework: WCAG 2.1 AA Guidelines
+
+**MANDATORY RESPONSE FORMAT - Follow this structure exactly:**
+
+# 🔍 Professional Accessibility Analysis Report
+
+## 📋 Executive Summary
+Based on industry knowledge of ${websiteType} platforms, provide:
+• Typical accessibility compliance status for this type of site
+• Common areas of concern for ${websiteType}
+• Expected user impact and business implications
+
+## 🚨 Top 5 Critical Issues (Typical for ${websiteType})
+
+### 1. [Most Common Issue for ${websiteType}]
+**🎯 Priority:** Critical  
+**📊 Impact:** [Explain user impact in plain language]  
+**🔧 Affected Areas:** [Common problem areas]  
+**✅ Solution:** [Step-by-step fix with code examples]  
+**⏱️ Time to Fix:** [Realistic estimate]
+
+### 2. [Second Most Common Issue]
+**🎯 Priority:** High  
+**📊 Impact:** [User impact]  
+**🔧 Affected Areas:** [Problem areas]  
+**✅ Solution:** [Specific fix with examples]  
+**⏱️ Time to Fix:** [Estimate]
+
+### 3. [Third Critical Issue]
+**🎯 Priority:** High  
+**📊 Impact:** [User impact]  
+**🔧 Affected Areas:** [Problem areas]  
+**✅ Solution:** [Implementation steps]  
+**⏱️ Time to Fix:** [Estimate]
+
+### 4. [Fourth Issue]
+**🎯 Priority:** Medium  
+**📊 Impact:** [User impact]  
+**🔧 Affected Areas:** [Problem areas]  
+**✅ Solution:** [Fix instructions]  
+**⏱️ Time to Fix:** [Estimate]
+
+### 5. [Fifth Issue]
+**🎯 Priority:** Medium  
+**📊 Impact:** [User impact]  
+**🔧 Affected Areas:** [Problem areas]  
+**✅ Solution:** [Implementation guide]  
+**⏱️ Time to Fix:** [Estimate]
+
+## 📊 Compliance Assessment
+
+**🏆 Expected Accessibility Score:** [X]/10 (typical for ${websiteType})  
+**📜 WCAG Compliance:** [Estimated level based on industry standards]  
+**🎯 Target Compliance:** AA (Recommended)  
+**🚦 Status:** [Expected status for this type of platform]  
+**👥 User Impact:** [How many users typically affected]
+
+## 🔧 **Immediate Action Items:**
+
+### **Live Scanning Tools** (Use These Now):
+• **Lighthouse**: Built into Chrome DevTools → F12 > Lighthouse > Accessibility  
+• **axe DevTools**: Free browser extension → Install from Chrome Web Store  
+• **WAVE**: Online scanner → wave.webaim.org  
+• **Accessibility Insights**: Microsoft's free tool → Download from GitHub
+
+### **Manual Testing** (15 minutes):
+• **Tab Navigation**: Press Tab through entire site - can you reach everything?  
+• **Screen Reader**: Turn on VoiceOver (Mac) or Narrator (Windows)  
+• **Keyboard Only**: Try using site without mouse  
+• **Zoom Test**: Zoom to 200% - does content still work?
+
+## 💡 Expert Recommendations for ${websiteType}
+
+### **Industry-Specific Best Practices:**
+• **[Practice 1 specific to ${websiteType}]** - [Why important for this platform type]
+• **[Practice 2 specific to ${websiteType}]** - [Implementation benefit]
+• **[Practice 3 specific to ${websiteType}]** - [User experience improvement]
+
+### **Code Examples** (${websiteType} Focus):
+\`\`\`html
+<!-- Example accessibility improvements for ${websiteType} -->
+[Provide relevant code snippet]
+\`\`\`
+
+### **Testing Strategy:**
+• **Automated**: Use axe-core for ${websiteType}-specific rules
+• **Manual**: Focus on [specific areas relevant to platform type]
+• **User Testing**: Include users with disabilities for [platform-specific scenarios]
+
+---
+
+**🔬 Analysis Method:** Expert knowledge of ${websiteType} accessibility patterns + WCAG 2.1 AA standards  
+**⚡ Want Live Scanning?** Use the tools above or run A11yAll locally with browser automation  
+**📞 Need Expert Help?** Consider professional accessibility audit for comprehensive analysis
+
+*Report generated by A11yAll - Created by Hit Shiroya*`;
 
         const chatCompletion = await groq.chat.completions.create({
             messages: [
                 {
                     role: "system",
-                    content: "You are a senior accessibility expert working within A11yAll, created by Hit Shiroya. Provide helpful, actionable accessibility guidance even when live scanning isn't available. Be encouraging and provide practical alternatives."
+                    content: "You are a senior accessibility auditor with WCAG certification. You're conducting professional website audits for A11yAll, created by Hit Shiroya. Provide detailed, actionable reports based on industry knowledge. CRITICAL: Follow the EXACT format structure. Include realistic code examples and specific guidance for different platform types. Be professional but practical."
                 },
                 {
                     role: "user",
@@ -188,15 +296,27 @@ Format your response professionally with actionable advice.`;
                 }
             ],
             model: "llama3-8b-8192",
-            temperature: 0.3,
-            max_tokens: 1500,
+            temperature: 0.2,
+            max_tokens: 2500,
         });
 
         return chatCompletion.choices[0]?.message?.content || 'Unable to generate analysis';
     } catch (error) {
-        console.error('Error generating URL analysis:', error);
-        return `I received a request to analyze **${url}**. In this serverless environment, I cannot perform live scans, but I can help you with accessibility best practices and manual testing guidance. AI analysis failed: ${error.message}`;
+        console.error('Error generating serverless accessibility analysis:', error);
+        return `I attempted to analyze **${url}** but encountered an error: ${error.message}. 
+
+**Quick Alternative:**
+1. **Use Lighthouse**: Open Chrome DevTools (F12) → Lighthouse tab → Run Accessibility audit
+2. **Try WAVE**: Visit wave.webaim.org and enter the URL
+3. **Install axe DevTools**: Free browser extension for comprehensive scanning
+
+These tools will give you immediate accessibility insights!`;
     }
+}
+
+// Helper function to provide URL analysis when Cypress is not available  
+async function generateUrlAnalysisWithoutScan(url) {
+    return await generateServerlessAccessibilityAnalysis(url);
 }
 
 app.post('/api/scan-url', async (req, res) => {
@@ -208,74 +328,18 @@ app.post('/api/scan-url', async (req, res) => {
     }
 
     try {
-        console.log(`[Backend] Starting live accessibility scan for: ${url}`);
+        console.log(`[Backend] Starting accessibility analysis for: ${url}`);
         
-        // Import Playwright and axe-core dynamically
-        const { chromium } = require('playwright');
-        const AxeBuilder = require('@axe-core/playwright').default;
-
-        // Launch browser with optimized settings for serverless
-        const browser = await chromium.launch({
-            headless: true,
-            args: [
-                '--no-sandbox',
-                '--disable-setuid-sandbox',
-                '--disable-dev-shm-usage',
-                '--disable-web-security',
-                '--disable-extensions',
-                '--no-first-run',
-                '--disable-default-apps'
-            ]
-        });
-
-        const context = await browser.newContext({
-            userAgent: 'A11yAll-Bot/1.0 (+https://a11yagent.vercel.app) Accessibility Scanner'
-        });
+        // For serverless environments, use AI-powered analysis instead of browser automation
+        const aiAnalysis = await generateServerlessAccessibilityAnalysis(url);
         
-        const page = await context.newPage();
-
-        // Set reasonable timeouts for serverless
-        page.setDefaultTimeout(30000);
-        page.setDefaultNavigationTimeout(30000);
-
-        // Navigate to the URL
-        await page.goto(url, { 
-            waitUntil: 'domcontentloaded',
-            timeout: 30000 
-        });
-
-        // Wait a bit for dynamic content to load
-        await page.waitForTimeout(2000);
-
-        // Run comprehensive accessibility scan
-        const results = await new AxeBuilder({ page })
-            .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'best-practice'])
-            .analyze();
-
-        await browser.close();
-
-        console.log(`[Backend] Scan completed. Found ${results.violations.length} violations`);
-
-        // Convert axe results to our expected format for AI analysis
-        const violationsData = [{
-            violations: results.violations,
-            timestamp: new Date().toISOString(),
-            url: url,
-            testEngine: 'axe-core + playwright'
-        }];
-
-        // Generate AI analysis using existing function
-        const aiResponseText = await generateAccessibilityAnalysis(url, violationsData);
-
         res.json({
             success: true,
-            answer: aiResponseText,
+            answer: aiAnalysis,
             scanDetails: {
-                totalViolations: results.violations.length,
-                passedRules: results.passes.length,
-                incompleteRules: results.incomplete.length,
-                engine: 'Playwright + axe-core',
-                timestamp: new Date().toISOString()
+                method: 'AI-Powered Analysis',
+                timestamp: new Date().toISOString(),
+                note: 'Live scanning available in local development environment'
             }
         });
 
