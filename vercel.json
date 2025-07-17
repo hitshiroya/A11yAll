@@ -1,6 +1,5 @@
 {
   "version": 2,
-  "name": "a11yagent",
   "builds": [
     {
       "src": "client/package.json",
@@ -10,22 +9,18 @@
       }
     },
     {
-      "src": "server/server.js",
+      "src": "api/server.js",
       "use": "@vercel/node"
     }
   ],
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "/server/server.js"
-    },
-    {
-      "src": "/(.*\\.(js|css|ico|png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot))",
-      "dest": "/client/dist/$1"
+      "dest": "/api/server.js"
     },
     {
       "src": "/(.*)",
-      "dest": "/client/dist/index.html"
+      "dest": "/client/dist/$1"
     }
   ]
 } 
