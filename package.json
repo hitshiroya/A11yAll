@@ -1,6 +1,16 @@
 {
+  "name": "a11yall",
+  "version": "1.0.0",
+  "description": "AI-powered accessibility consulting platform",
+  "scripts": {
+    "build": "cd client && npm install && npm run build && cd .. && cp -r client/dist/* . && cp client/dist/.* . 2>/dev/null || true",
+    "vercel-build": "npm run build",
+    "dev": "concurrently \"cd client && npm run dev\" \"cd api && npm run dev\"",
+    "start": "cd api && npm start"
+  },
   "devDependencies": {
     "cypress": "^14.5.1",
-    "cypress-axe": "^1.6.0"
+    "cypress-axe": "^1.6.0",
+    "concurrently": "^8.2.2"
   }
 }
