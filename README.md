@@ -50,8 +50,8 @@
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/YOUR_USERNAME/a11yall.git
-   cd a11yall
+   git clone https://github.com/hitshiroya/A11yAll.git
+   cd A11yAll
    ```
 
 2. **Install dependencies**
@@ -102,7 +102,7 @@
    - Deploy! 🚀
 
 3. **Alternative: One-click deploy**
-   [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/YOUR_USERNAME/a11yall)
+   [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/hitshiroya/A11yAll)
 
 For detailed deployment instructions, see [deploy.md](./deploy.md)
 
@@ -168,7 +168,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Hit Shiroya**
 - Email: hitp363530@gmail.com
-- GitHub: [@YOUR_GITHUB_USERNAME](https://github.com/YOUR_GITHUB_USERNAME)
+- GitHub: [@hitshiroya](https://github.com/hitshiroya)
 
 ## 🎯 Mission
 
