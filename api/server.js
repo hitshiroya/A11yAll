@@ -1,8 +1,5 @@
-// a11y-insights-tool/server/server.js
+// A11yAll - Live Accessibility Scanning API
 const express = require('express');
-const { exec } = require('child_process'); // To execute shell commands (like Cypress)
-const fs = require('fs').promises; // Node.js File System module (for async operations)
-const path = require('path'); // Node.js Path module for handling file paths
 const cors = require('cors');
 require('dotenv').config(); // Load environment variables
 
@@ -15,9 +12,6 @@ const groq = new Groq({
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-
-// Detect if running in serverless environment
-const isServerless = !!(process.env.VERCEL || process.env.NETLIFY || process.env.AWS_LAMBDA_FUNCTION_NAME);
 
 // Middleware
 app.use(cors()); // Enable CORS for all routes (important for frontend communication)
@@ -213,18 +207,92 @@ app.post('/api/scan-url', async (req, res) => {
         return res.status(400).json({ success: false, message: 'URL is required in the request body.' });
     }
 
-    // Check if running in serverless environment
-    if (isServerless) {
-        console.log('Running in serverless environment, providing alternative analysis');
+    try {
+        console.log(`[Backend] Starting live accessibility scan for: ${url}`);
+        
+        // Import Playwright and axe-core dynamically
+        const { chromium } = require('playwright');
+        const AxeBuilder = require('@axe-core/playwright').default;
+
+        // Launch browser with optimized settings for serverless
+        const browser = await chromium.launch({
+            headless: true,
+            args: [
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+                '--disable-dev-shm-usage',
+                '--disable-web-security',
+                '--disable-extensions',
+                '--no-first-run',
+                '--disable-default-apps'
+            ]
+        });
+
+        const context = await browser.newContext({
+            userAgent: 'A11yAll-Bot/1.0 (+https://a11yagent.vercel.app) Accessibility Scanner'
+        });
+        
+        const page = await context.newPage();
+
+        // Set reasonable timeouts for serverless
+        page.setDefaultTimeout(30000);
+        page.setDefaultNavigationTimeout(30000);
+
+        // Navigate to the URL
+        await page.goto(url, { 
+            waitUntil: 'domcontentloaded',
+            timeout: 30000 
+        });
+
+        // Wait a bit for dynamic content to load
+        await page.waitForTimeout(2000);
+
+        // Run comprehensive accessibility scan
+        const results = await new AxeBuilder({ page })
+            .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'best-practice'])
+            .analyze();
+
+        await browser.close();
+
+        console.log(`[Backend] Scan completed. Found ${results.violations.length} violations`);
+
+        // Convert axe results to our expected format for AI analysis
+        const violationsData = [{
+            violations: results.violations,
+            timestamp: new Date().toISOString(),
+            url: url,
+            testEngine: 'axe-core + playwright'
+        }];
+
+        // Generate AI analysis using existing function
+        const aiResponseText = await generateAccessibilityAnalysis(url, violationsData);
+
+        res.json({
+            success: true,
+            answer: aiResponseText,
+            scanDetails: {
+                totalViolations: results.violations.length,
+                passedRules: results.passes.length,
+                incompleteRules: results.incomplete.length,
+                engine: 'Playwright + axe-core',
+                timestamp: new Date().toISOString()
+            }
+        });
+
+    } catch (error) {
+        console.error(`[Backend] Live scan error: ${error.message}`);
+        
+        // Fallback to helpful guidance if scan fails
         try {
             const analysis = await generateUrlAnalysisWithoutScan(url);
             return res.json({
                 success: true,
-                answer: `# 🌐 Accessibility Analysis Request for ${url}
+                answer: `# ⚠️ Scan Error - Alternative Analysis for ${url}
 
-## ⚠️ Serverless Environment Notice
+## 🚨 Technical Issue
+I encountered an error while performing the live accessibility scan: **${error.message}**
 
-I'm currently running in a serverless environment where I cannot perform live accessibility scans with automated tools. However, I can provide you with comprehensive guidance!
+However, I can still provide you with comprehensive guidance!
 
 ${analysis}
 
@@ -232,7 +300,7 @@ ${analysis}
 
 ### **Browser Extensions:**
 • **axe DevTools** - Free browser extension by Deque
-• **WAVE** - Web Accessibility Evaluation Tool
+• **WAVE** - Web Accessibility Evaluation Tool  
 • **Lighthouse** - Built into Chrome DevTools
 
 ### **Online Tools:**
@@ -246,102 +314,18 @@ ${analysis}
 • **Color Contrast** - Use WebAIM Contrast Checker
 
 ---
-*For detailed automated scans, please use the tools above or run A11yAll in a local environment where Cypress testing is available.*`
+*Please try the scan again in a moment, or use the tools above for immediate analysis.*`
             });
-        } catch (error) {
+        } catch (fallbackError) {
             return res.status(500).json({
                 success: false,
-                message: `Error generating URL analysis: ${error.message}`
+                message: `Scan failed: ${error.message}. Fallback analysis also failed: ${fallbackError.message}`
             });
         }
     }
-
-    // Original Cypress-based scanning for local development
-    const resultsFilePath = path.join(__dirname, 'cypress-a11y-results.json');
-    console.log(`Results file path: ${resultsFilePath}`);
-    
-    // Clean up any existing results file
-    try {
-        await fs.access(resultsFilePath);
-        await fs.unlink(resultsFilePath);
-        console.log('Cleaned up existing results file');
-    } catch (cleanupError) {
-        console.log('No existing results file to clean up');
-    }
-    
-    const cypressCommand = `npx cypress run --config-file ./cypress.config.js --env targetUrl="${url}" --headless`;
-
-    let aiResponseText;
-
-    try {
-        console.log(`[Backend] Starting accessibility scan for: ${url}`);
-
-        const workingDir = path.resolve(__dirname, '..');
-        console.log(`[Backend] Working directory: ${workingDir}`);
-        
-        // Run Cypress test
-        await new Promise((resolve, reject) => {
-            exec(cypressCommand, { 
-                cwd: workingDir,
-                timeout: 120000, // 2 minute timeout
-                maxBuffer: 1024 * 1024 * 10, // 10MB buffer
-            }, (error, stdout, stderr) => {
-                console.log(`[Cypress] stdout: ${stdout}`);
-                if (stderr) console.log(`[Cypress] stderr: ${stderr}`);
-                if (error) {
-                    console.log(`[Cypress] Error (this is expected if violations found): ${error.message}`);
-                }
-                resolve(); // Always resolve, as Cypress "errors" when violations are found
-            });
-        });
-
-        // Read Cypress results
-        let violationsData;
-        try {
-            const rawData = await fs.readFile(resultsFilePath, 'utf8');
-            violationsData = JSON.parse(rawData);
-            console.log(`[Backend] Successfully read ${violationsData.length} test results from Cypress`);
-        } catch (readError) {
-            console.error(`[Backend] Error reading results file: ${readError.message}`);
-            return res.json({
-                success: true,
-                answer: `I attempted to scan **${url}** but encountered an issue reading the results. This might indicate the website is inaccessible or there was a technical problem. Please check if the URL is correct and accessible.`
-            });
-        }
-
-        // Generate AI analysis
-        aiResponseText = await generateAccessibilityAnalysis(url, violationsData);
-
-        res.json({
-            success: true,
-            answer: aiResponseText
-        });
-
-    } catch (err) {
-        console.error(`[Backend] Scan error: ${err.message}`);
-        res.json({
-            success: true,
-            answer: `I encountered an error while scanning **${url}**: ${err.message}. Please verify the URL is accessible and try again.`
-        });
-    }
 });
 
-// Test endpoint for Cypress
-app.post('/api/test-cypress', async (req, res) => {
-    const workingDir = path.resolve(__dirname, '..');
-    const testCommand = 'npx cypress run --config-file ./cypress.config.js --env targetUrl="https://example.com" --headless';
-    
-    console.log(`[Test] Running: ${testCommand}`);
-    
-    exec(testCommand, { cwd: workingDir }, (error, stdout, stderr) => {
-        res.json({
-            error: error ? error.message : null,
-            stdout: stdout.substring(0, 1000) + '...', // Truncate for readability
-            stderr: stderr,
-            workingDir: workingDir
-        });
-    });
-});
+
 
 // General chat endpoint using Groq
 app.post('/api/chat-general', async (req, res) => {
