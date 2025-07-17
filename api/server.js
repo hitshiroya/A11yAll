@@ -420,9 +420,15 @@ Please provide a comprehensive answer following the mandatory structure above. B
     }
 });
 
-// Start the Express server
-app.listen(PORT, () => {
-    console.log(`🚀 Server running on http://localhost:${PORT}`);
-    console.log('📝 Make sure your React frontend is running on http://localhost:5173');
-    console.log('🔑 Add GROQ_API_KEY to your environment variables for AI features');
-});
+// Export the Express app for Vercel serverless functions
+module.exports = app;
+
+// For local development, start the server if not in Vercel environment
+if (!process.env.VERCEL) {
+    const PORT = process.env.PORT || 5000;
+    app.listen(PORT, () => {
+        console.log(`🚀 Server running on http://localhost:${PORT}`);
+        console.log('📝 Make sure your React frontend is running on http://localhost:5173');
+        console.log('🔑 Add GROQ_API_KEY to your environment variables for AI features');
+    });
+}
