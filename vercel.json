@@ -19,16 +19,22 @@
       "dest": "/api/server.js"
     },
     {
+      "src": "/a11yall-favicon\\.svg(\\?.*)?",
+      "dest": "/a11yall-favicon.svg",
+      "headers": {
+        "Content-Type": "image/svg+xml"
+      }
+    },
+    {
+      "src": "/favicon\\.ico(\\?.*)?",
+      "dest": "/a11yall-favicon.svg",
+      "headers": {
+        "Content-Type": "image/svg+xml"
+      }
+    },
+    {
       "src": "/assets/(.*)",
       "dest": "/assets/$1"
-    },
-    {
-      "src": "/a11yall-favicon.svg",
-      "dest": "/a11yall-favicon.svg"
-    },
-    {
-      "src": "/favicon.ico",
-      "dest": "/a11yall-favicon.svg"
     },
     {
       "src": "/vite.svg",
