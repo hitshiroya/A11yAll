@@ -170,10 +170,10 @@ async function generateServerlessAccessibilityAnalysis(url) {
         const domain = new URL(url).hostname.toLowerCase();
         let websiteType = 'general website';
         
-        if (domain.includes('facebook')) websiteType = 'social media platform';
-        else if (domain.includes('twitter') || domain.includes('x.com')) websiteType = 'social media platform';
+        if (domain.includes('netflix')) websiteType = 'video streaming service';
         else if (domain.includes('youtube')) websiteType = 'video streaming platform';
-        else if (domain.includes('netflix')) websiteType = 'video streaming service';
+        else if (domain.includes('facebook')) websiteType = 'social media platform';
+        else if (domain.includes('twitter') || domain.includes('x.com')) websiteType = 'social media platform';
         else if (domain.includes('amazon')) websiteType = 'e-commerce platform';
         else if (domain.includes('google')) websiteType = 'search engine';
         else if (domain.includes('github')) websiteType = 'code repository platform';
